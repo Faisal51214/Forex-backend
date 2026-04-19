@@ -92,7 +92,7 @@ function generateSignal(candles,pair){
   const dir=type==="BUY"?1:-1;
   const dec=pair.includes("JPY")?3:pair.includes("XAU")?2:5;
   const f=n=>parseFloat(n.toFixed(dec));
-  return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*atr*1.5),tp1:f(price+dir*atr*1.5),tp2:f(price+dir*atr*3),tp3:f(price+dir*atr*5),atr:f(atr),reasons,bull,bear};
+  return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*atr*1.0),tp1:f(price+dir*atr*1.0),tp2:f(price+dir*atr*2.0),tp3:f(price+dir*atr*3.5),atr:f(atr),reasons,bull,bear};
 }
 
 async function checkAndUpdateSignals(){

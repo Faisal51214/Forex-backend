@@ -144,6 +144,13 @@ async function fetchAllData(){
 
     lastFetch=new Date().toISOString();
 
+// Only generate signals during market hours (Mon-Fri)
+const now = new Date();
+const day = now.getUTCDay();
+const hour = now.getUTCHours();
+const isMarketOpen = day >= 1 && day <= 5 && !(day === 5 && hour >= 22) && !(day === 1 && hour < 1);
+if(!isMarketOpen){ console.log("Market closed - skipping signals"); return; }
+
     // Generate signals
     for(const pair of PAIRS){
       const candles=cachedCandles[pair];

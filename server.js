@@ -91,8 +91,13 @@ function generateSignal(candles,pair){
   const type=bull>bear?"BUY":"SELL";
   const dir=type==="BUY"?1:-1;
   const dec=pair.includes("JPY")?3:pair.includes("XAU")?2:5;
-  const f=n=>parseFloat(n.toFixed(dec));
-  return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*atr*1.0),tp1:f(price+dir*atr*1.0),tp2:f(price+dir*atr*2.0),tp3:f(price+dir*atr*3.5),atr:f(atr),reasons,bull,bear};
+const f=n=>parseFloat(n.toFixed(dec));
+const isGold=pair.includes("XAU");
+const tp1Pips=isGold?60:30;
+const tp2Pips=isGold?100:60;
+const tp3Pips=isGold?150:90;
+const pipSize=pair.includes("JPY")?0.01:pair.includes("XAU")?0.1:0.0001;
+return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*atr*1.0),tp1:f(price+dir*tp1Pips*pipSize),tp2:f(price+dir*tp2Pips*pipSize),tp3:f(price+dir*tp3Pips*pipSize),atr:f(atr),reasons,bull,bear};
 }
 
 async function checkAndUpdateSignals(){
@@ -109,15 +114,15 @@ async function checkAndUpdateSignals(){
         if(p<=sig.sl)status="stopped";
         else if(p>=sig.tp3)status="tp3_hit";
         else if(p>=sig.tp2)status="tp2_hit";
-        else if(p>=sig.tp1)status="tp1_hit";
+        else if(p>=sig.tp1)status="tp1_hit_close";
       }else{
         if(p>=sig.sl)status="stopped";
         else if(p<=sig.tp3)status="tp3_hit";
         else if(p<=sig.tp2)status="tp2_hit";
-        else if(p<=sig.tp1)status="tp1_hit";
+        else if(p<=sig.tp1)status="tp1_hit_close";
       }
       const update={pips,currentPrice:p,status};
-      if(status!=="running"&&status!=="tp1_hit"){
+      if(status!=="running"){
         update.closedAt=p;
         update.closedTime=new Date();
       }

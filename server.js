@@ -97,7 +97,8 @@ const tp1Pips=isGold?60:30;
 const tp2Pips=isGold?100:60;
 const tp3Pips=isGold?150:90;
 const pipSize=pair.includes("JPY")?0.01:pair.includes("XAU")?0.1:0.0001;
-return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*atr*1.0),tp1:f(price+dir*tp1Pips*pipSize),tp2:f(price+dir*tp2Pips*pipSize),tp3:f(price+dir*tp3Pips*pipSize),atr:f(atr),reasons,bull,bear};
+const slPips=isGold?40:20;
+return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*slPips*pipSize),tp1:f(price+dir*tp1Pips*pipSize),tp2:f(price+dir*tp2Pips*pipSize),tp3:f(price+dir*tp3Pips*pipSize),atr:f(atr),reasons,bull,bear};
 }
 
 async function checkAndUpdateSignals(){

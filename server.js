@@ -85,9 +85,12 @@ function generateSignal(candles,pair){
   if(stoch!==null){if(stoch<20){bull+=2;reasons.push(`Stoch oversold (${stoch.toFixed(1)})`);}if(stoch>80){bear+=2;reasons.push(`Stoch overbought (${stoch.toFixed(1)})`);}}
   const total=bull+bear;
   const conf=Math.round((Math.max(bull,bear)/Math.max(total,1))*100);
-  if(bull<5&&bear<5)return null;
-  if(Math.abs(bull-bear)<2)return null;
-  if(conf<55)return null;
+  const ema200=calcEMA(closes,200);
+  const e200=ema200.length>0?ema200[ema200.length-1]:null;
+  if(e200){if(bull>bear&&price<e200)return null;if(bear>bull&&price>e200)return null;}
+  if(bull<10&&bear<10)return null;
+  if(Math.abs(bull-bear)<4)return null;
+  if(conf<65)return null;
   const type=bull>bear?"BUY":"SELL";
   const dir=type==="BUY"?1:-1;
   const dec=pair.includes("JPY")?3:pair.includes("XAU")?2:5;
@@ -97,7 +100,7 @@ const tp1Pips=isGold?60:30;
 const tp2Pips=isGold?100:60;
 const tp3Pips=isGold?150:90;
 const pipSize=pair.includes("JPY")?0.01:pair.includes("XAU")?0.1:0.0001;
-const slPips=isGold?40:20;
+const slPips=isGold?80:35;
 return{type,confidence:Math.min(conf,94),entry:f(price),sl:f(price-dir*slPips*pipSize),tp1:f(price+dir*tp1Pips*pipSize),tp2:f(price+dir*tp2Pips*pipSize),tp3:f(price+dir*tp3Pips*pipSize),atr:f(atr),reasons,bull,bear};
 }
 

@@ -188,7 +188,7 @@ app.get("/prices",(req,res)=>res.json({prices:cachedPrices,lastFetch}));
 app.get("/candles/:pair",(req,res)=>res.json({candles:cachedCandles[decodeURIComponent(req.params.pair)]||[],lastFetch}));
 app.get("/signals",async(req,res)=>{
   try{
-    const active=await Signal.find({status:{$in:["running","tp1_hit"]}}).sort({openTime:-1});
+    const active=await Signal.find({status:{$in:["running"]}}).sort({openTime:-1});
     const history=await Signal.find({status:{$in:["stopped","tp2_hit","tp3_hit",tp1_hit_close",tp1_hit"]}}).sort({closedTime:-1}).limit(50);
     res.json({active,history,lastFetch});
   }catch(e){res.json({active:[],history:[],lastFetch});}

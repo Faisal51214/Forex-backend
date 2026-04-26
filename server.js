@@ -189,13 +189,13 @@ app.get("/candles/:pair",(req,res)=>res.json({candles:cachedCandles[decodeURICom
 app.get("/signals",async(req,res)=>{
   try{
     const active=await Signal.find({status:{$in:["running","tp1_hit"]}}).sort({openTime:-1});
-    const history=await Signal.find({status:{$in:["stopped","tp2_hit","tp3_hit"]}}).sort({closedTime:-1}).limit(50);
+    const history=await Signal.find({status:{$in:["stopped","tp2_hit","tp3_hit",tp1_hit_close"]}}).sort({closedTime:-1}).limit(50);
     res.json({active,history,lastFetch});
   }catch(e){res.json({active:[],history:[],lastFetch});}
 });
 app.get("/health",async(req,res)=>{
   const active=await Signal.countDocuments({status:{$in:["running","tp1_hit"]}});
-  const history=await Signal.countDocuments({status:{$in:["stopped","tp2_hit","tp3_hit"]}});
+  const history=await Signal.countDocuments({status:{$in:["stopped","tp2_hit","tp3_hit","tp1_hit_close"]}});
   res.json({status:"ok",lastFetch,prices:Object.keys(cachedPrices).length,active,history});
 });
 

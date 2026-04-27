@@ -144,7 +144,7 @@ async function fetchAllData(){
     for(const pair of PAIRS){if(pd[pair]?.price)cachedPrices[pair]=parseFloat(pd[pair].price);}
 
     for(const pair of PAIRS){
-      const url=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=1h&outputsize=100&apikey=${getKey()}`;
+      const url=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=15min&outputsize=100&apikey=${getKey()}`;
       const res=await fetch(url);
       const data=await res.json();
       if(data.values){cachedCandles[pair]=data.values.reverse().map(v=>({open:parseFloat(v.open),high:parseFloat(v.high),low:parseFloat(v.low),close:parseFloat(v.close)}));}

@@ -88,9 +88,9 @@ function generateSignal(candles,pair){
   const ema200=calcEMA(closes,200);
   const e200=ema200.length>0?ema200[ema200.length-1]:null;
   if(e200){if(bull>bear&&price<e200)return null;if(bear>bull&&price>e200)return null;}
-  if(bull<10&&bear<10)return null;
-  if(Math.abs(bull-bear)<4)return null;
-  if(conf<65)return null;
+  if(bull<7&&bear<7)return null;
+  if(Math.abs(bull-bear)<3)return null;
+  if(conf<60)return null;
   const type=bull>bear?"BUY":"SELL";
   const dir=type==="BUY"?1:-1;
   const dec=pair.includes("JPY")?3:pair.includes("XAU")?2:5;

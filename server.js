@@ -88,9 +88,9 @@ function generateSignal(candles,pair){
   const ema200=calcEMA(closes,200);
   const e200=ema200.length>0?ema200[ema200.length-1]:null;
   if(e200){if(bull>bear&&price<e200)return null;if(bear>bull&&price>e200)return null;}
-  if(bull<7&&bear<7)return null;
-  if(Math.abs(bull-bear)<3)return null;
-  if(conf<60)return null;
+  if(bull<4&&bear<4)return null;
+  if(Math.abs(bull-bear)<2)return null;
+  if(conf<52)return null;
   const type=bull>bear?"BUY":"SELL";
   const dir=type==="BUY"?1:-1;
   const dec=pair.includes("JPY")?3:pair.includes("XAU")?2:5;
@@ -144,7 +144,7 @@ async function fetchAllData(){
     for(const pair of PAIRS){if(pd[pair]?.price)cachedPrices[pair]=parseFloat(pd[pair].price);}
 
     for(const pair of PAIRS){
-      const url=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=15min&outputsize=200&apikey=${getKey()}`;
+      const url=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=1h&outputsize=200&apikey=${getKey()}`;
       const res=await fetch(url);
       const data=await res.json();
       if(data.values){cachedCandles[pair]=data.values.reverse().map(v=>({open:parseFloat(v.open),high:parseFloat(v.high),low:parseFloat(v.low),close:parseFloat(v.close)}));}

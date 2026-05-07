@@ -49,7 +49,7 @@ function getKey() {
   return key;
 }
 
-const PAIRS = ["EUR/USD","GBP/USD","USD/JPY","XAU/USD","AUD/USD","USD/CHF"];
+const PAIRS = ["EUR/USD","GBP/USD","USD/JPY","AUD/USD","USD/CHF","EUR/GBP","EUR/JPY","GBP/JPY","USD/CAD","NZD/USD"];
 
 let cachedPrices = {};
 let cachedCandles = {};

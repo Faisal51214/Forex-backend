@@ -138,11 +138,14 @@ async function checkAndUpdateSignals(){
 async function fetchAllData(){
   try{
     const fetch=(await import("node-fetch")).default;
-    const syms=PAIRS.join(",");
-    const pr=await fetch(`https://api.twelvedata.com/price?symbol=${encodeURIComponent(syms)}&apikey=${getKey()}`);
-    const pd=await pr.json();
-    for(const pair of PAIRS){if(pd[pair]?.price)cachedPrices[pair]=parseFloat(pd[pair].price);}
-
+    for(const pair of PAIRS){
+      try{
+        const pr=await fetch(`https://api.twelvedata.com/price?symbol=${encodeURIComponent(pair)}&apikey=${getKey()}`);
+        const pd=await pr.json();
+        if(pd.price)cachedPrices[pair]=parseFloat(pd.price);
+        await new Promise(r=>setTimeout(r,200));
+      }catch(e){}
+    }
     for(const pair of PAIRS){
       const url=`https://api.twelvedata.com/time_series?symbol=${encodeURIComponent(pair)}&interval=1h&outputsize=200&apikey=${getKey()}`;
       const res=await fetch(url);
